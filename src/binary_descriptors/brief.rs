@@ -219,6 +219,7 @@ pub(crate) fn brief_impl(
 ///
 /// [rublee]: http://www.gwylab.com/download/ORB_2012.pdf
 /// [Calonder, et. al. (2010)]: https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf
+#[cfg(feature = "std")]
 pub fn brief(
     image: &GrayImage,
     keypoints: &[Point<u32>],

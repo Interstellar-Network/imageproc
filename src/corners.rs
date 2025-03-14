@@ -5,8 +5,11 @@ use crate::{
     point::Point,
 };
 use image::{GenericImageView, GrayImage};
-use rand::{rngs::StdRng, SeedableRng};
+use rand::SeedableRng;
 use rand_distr::Distribution;
+
+#[cfg(feature = "std")]
+use rand::rngs::StdRng;
 
 /// A location and score for a detected corner.
 /// The scores need not be comparable between different
@@ -170,6 +173,7 @@ fn intensity_centroid(image: &GrayImage, x: u32, y: u32, radius: u32) -> f32 {
 /// Finds oriented FAST-9 corners as presented in [Rublee et. al. (2012)][rublee].
 ///
 /// [rublee]: http://www.gwylab.com/download/ORB_2012.pdf
+#[cfg(feature = "std")]
 pub fn oriented_fast(
     image: &GrayImage,
     threshold: Option<u8>,

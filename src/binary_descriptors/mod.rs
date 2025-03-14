@@ -1,9 +1,12 @@
 //! Functions for generating and comparing compact binary patch descriptors.
 
-use rand::{rngs::StdRng, Rng, SeedableRng};
+use rand::{Rng, SeedableRng};
 use std::collections::HashMap;
 
 use crate::point::Point;
+
+#[cfg(feature = "std")]
+use rand::rngs::StdRng;
 
 pub mod brief;
 mod constants;
@@ -45,6 +48,7 @@ pub trait BinaryDescriptor {
 ///
 /// [lsh]:
 ///     https://en.wikipedia.org/wiki/Locality_sensitive_hashing#Bit_sampling_for_Hamming_distance
+#[cfg(feature = "std")]
 pub fn match_binary_descriptors<'a, T: BinaryDescriptor>(
     d1: &'a [T],
     d2: &'a [T],

@@ -2,11 +2,15 @@
 
 use crate::definitions::{Clamp, HasBlack, HasWhite, Image};
 use image::Pixel;
-use rand::{rngs::StdRng, SeedableRng};
+use rand::SeedableRng;
 use rand_distr::{Distribution, Normal, Uniform};
+
+#[cfg(feature = "std")]
+use rand::rngs::StdRng;
 
 /// Adds independent additive Gaussian noise to all channels
 /// of an image, with the given mean and standard deviation.
+#[cfg(feature = "std")]
 pub fn gaussian_noise<P>(image: &Image<P>, mean: f64, stddev: f64, seed: u64) -> Image<P>
 where
     P: Pixel,
@@ -16,6 +20,8 @@ where
     gaussian_noise_mut(&mut out, mean, stddev, seed);
     out
 }
+
+#[cfg(feature = "std")]
 #[doc=generate_mut_doc_comment!("gaussian_noise")]
 pub fn gaussian_noise_mut<P>(image: &mut Image<P>, mean: f64, stddev: f64, seed: u64)
 where
@@ -35,6 +41,7 @@ where
 
 /// Converts pixels to black or white at the given `rate` (between 0.0 and 1.0).
 /// Black and white occur with equal probability.
+#[cfg(feature = "std")]
 pub fn salt_and_pepper_noise<P>(image: &Image<P>, rate: f64, seed: u64) -> Image<P>
 where
     P: Pixel + HasBlack + HasWhite,
@@ -43,6 +50,8 @@ where
     salt_and_pepper_noise_mut(&mut out, rate, seed);
     out
 }
+
+#[cfg(feature = "std")]
 #[doc=generate_mut_doc_comment!("salt_and_pepper_noise")]
 pub fn salt_and_pepper_noise_mut<P>(image: &mut Image<P>, rate: f64, seed: u64)
 where
