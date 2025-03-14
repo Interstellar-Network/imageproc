@@ -13,18 +13,19 @@ homepage = "https://github.com/image-rs/imageproc"
 exclude = [".github/*", "examples/*", "tests/*"]
 
 [features]
-default = ["rayon", "image/default"]
+default = ["rayon", "image/default", "std"]
+std = ["ab_glyph/std", "nalgebra/std"]
 display-window = ["sdl2"]
 rayon = ["dep:rayon", "image/rayon"]
 
 [dependencies]
-ab_glyph = { version = "0.2.23", default-features = false, features = ["std"] }
+ab_glyph = { version = "0.2.23", default-features = false, features = ["libm"] }
 approx = { version = "0.5", default-features = false }
 image = { version = "0.25.0", default-features = false }
 itertools = { version = "0.13.0", default-features = false, features = [
     "use_std",
 ] }
-nalgebra = { version = "0.32", default-features = false, features = ["std"] }
+nalgebra = { version = "0.32", default-features = false, features = ["libm"] }
 num = { version = "0.4.1", default-features = false }
 rand = { version = "0.8.5", default-features = false, features = [
     "std",
