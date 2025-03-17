@@ -3,7 +3,7 @@ name = "imageproc"
 version = "0.26.0"
 authors = ["theotherphil"]
 # note: when changed, also update `msrv` in `.github/workflows/check.yml`
-rust-version = "1.80.1"
+rust-version = "1.66"
 edition = "2021"
 license = "MIT"
 description = "Image processing operations"
@@ -21,7 +21,7 @@ rayon = ["dep:rayon", "image/rayon"]
 [dependencies]
 ab_glyph = { version = "0.2.23", default-features = false, features = ["libm"] }
 approx = { version = "0.5", default-features = false }
-image = { version = "0.25.0", default-features = false }
+image = { version = "0.25.0", git = "https://github.com/Interstellar-Network/image.git", branch = "2025-no_std", default-features = false }
 itertools = { version = "0.13.0", default-features = false, features = ["use_alloc"] }
 nalgebra = { version = "0.32", default-features = false, features = ["libm"] }
 num = { version = "0.4.1", default-features = false }
@@ -34,8 +34,11 @@ sdl2 = { version = "0.36", optional = true, default-features = false, features =
 katexit = { version = "0.1.4", optional = true, default-features = false }
 rustdct = "0.7.1"
 
-[target.'cfg(target_arch = "wasm32")'.dependencies]
-getrandom = { version = "0.2", default-features = false, features = ["js"] }
+# Interstellar
+getrandom = { version = "=0.2.3", default-features = false }
+
+# [target.'cfg(target_arch = "wasm32")'.dependencies]
+# getrandom = { version = "0.2", default-features = false, features = ["js"] }
 
 [dev-dependencies]
 assert_approx_eq = "1.1.0"
@@ -61,3 +64,12 @@ rpath = false
 lto = false
 debug-assertions = false
 codegen-units = 1
+
+###############################################################################
+
+[patch."https://github.com/Interstellar-Network/image.git"]
+image = { path = "../image/" }
+
+[patch.crates-io]
+image = { path = "../image/" }
+
