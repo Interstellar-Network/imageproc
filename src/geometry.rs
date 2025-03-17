@@ -1,6 +1,7 @@
 //! Computational geometry functions, for example finding convex hulls.
 
 use crate::point::{distance, Line, Point, Rotation};
+use alloc::vec;
 use alloc::vec::Vec;
 use core::cmp::{Ord, Ordering};
 use core::f64::{self, consts::PI};

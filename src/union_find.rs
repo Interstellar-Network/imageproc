@@ -1,6 +1,7 @@
 //! An implementation of disjoint set forests for union find.
 
 use alloc::vec::Vec;
+use alloc::vec;
 
 /// Data structure for efficient union find.
 pub struct DisjointSetForest {
@@ -81,6 +82,7 @@ impl DisjointSetForest {
     }
 
     /// Returns the elements of each tree.
+    #[cfg(feature = "std")]
     pub fn trees(&mut self) -> Vec<Vec<usize>> {
         use std::collections::HashMap;
 

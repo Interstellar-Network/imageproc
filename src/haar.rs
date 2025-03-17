@@ -4,10 +4,10 @@
 
 use crate::definitions::{HasBlack, HasWhite, Image};
 use alloc::vec::Vec;
+use core::marker::PhantomData;
+use core::ops::Range;
 use image::{GenericImage, GenericImageView, Luma};
 use itertools::Itertools;
-use std::marker::PhantomData;
-use std::ops::Range;
 
 /// A [Haar-like feature].
 ///

@@ -3,8 +3,9 @@
 
 use crate::definitions::Image;
 use crate::map::{ChannelMap, WithChannel};
+use alloc::vec;
+use core::ops::AddAssign;
 use image::{GenericImageView, GrayImage, Luma, Pixel, Primitive, Rgb, Rgba};
-use std::ops::AddAssign;
 
 /// Computes the 2d running sum of an image. Channels are summed independently.
 ///

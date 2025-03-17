@@ -8,6 +8,7 @@ use crate::gradients::gradients;
 use crate::kernel::{self};
 use crate::map::{map_pixels, WithChannel};
 use alloc::vec::Vec;
+use alloc::vec;
 use core::cmp::min;
 use image::{GrayImage, Luma, Pixel, Rgb};
 

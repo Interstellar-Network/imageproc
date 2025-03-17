@@ -4,6 +4,7 @@ use crate::definitions::Image;
 use alloc::vec::Vec;
 use image::{GenericImageView, GrayImage, Pixel, Primitive};
 use num::Bounded;
+use alloc::vec;
 
 /// A minimum and maximum value returned by [`min_max()`]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

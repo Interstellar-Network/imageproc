@@ -1,6 +1,8 @@
 use crate::definitions::Image;
+use alloc::vec;
+use alloc::vec::Vec;
+use core::cmp::{max, min};
 use image::{GenericImageView, Pixel};
-use std::cmp::{max, min};
 
 /// Applies a median filter of given dimensions to an image. Each output pixel is the median
 /// of the pixels in a `(2 * x_radius + 1) * (2 * y_radius + 1)` kernel of pixels in the input image.

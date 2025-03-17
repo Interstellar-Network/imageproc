@@ -1,6 +1,6 @@
 //! Functions for composing one or more images.
 
-use std::cmp::min;
+use core::cmp::min;
 
 use image::math::Rect;
 use image::Pixel;

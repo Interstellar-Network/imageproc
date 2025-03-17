@@ -1,3 +1,4 @@
+use alloc::vec;
 use image::{GenericImage, GenericImageView, GrayImage, Luma};
 
 use crate::{

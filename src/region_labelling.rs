@@ -1,6 +1,7 @@
 //! Functions for finding and labelling connected components of an image.
 
-use std::cmp;
+use alloc::vec;
+use core::cmp;
 
 use image::{GenericImage, GenericImageView, Luma};
 

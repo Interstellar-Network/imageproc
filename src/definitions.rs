@@ -1,5 +1,5 @@
 //! Trait definitions and type aliases.
-
+use alloc::vec::Vec;
 use image::{ImageBuffer, Luma, LumaA, Pixel, Rgb, Rgba};
 
 /// An `ImageBuffer` containing Pixels of type P with storage `Vec<P::Subpixel>`.

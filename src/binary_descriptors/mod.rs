@@ -1,7 +1,6 @@
 //! Functions for generating and comparing compact binary patch descriptors.
 
 use rand::{Rng, SeedableRng};
-use std::collections::HashMap;
 
 use crate::point::Point;
 
@@ -55,6 +54,8 @@ pub fn match_binary_descriptors<'a, T: BinaryDescriptor>(
     threshold: u32,
     seed: Option<u64>,
 ) -> Vec<(&'a T, &'a T)> {
+    use std::collections::HashMap;
+
     // early return if either input is empty
     if d1.is_empty() || d2.is_empty() {
         return Vec::new();

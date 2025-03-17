@@ -2,6 +2,7 @@ use crate::definitions::Image;
 use alloc::borrow::Cow;
 use image::Luma;
 use alloc::vec::Vec;
+use alloc::vec;
 
 /// Computes the 2 dimensional [DCT].
 ///

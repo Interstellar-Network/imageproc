@@ -4,6 +4,9 @@
 /// [Calonder, et. al. (2010)]: https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf
 use image::{GenericImageView, GrayImage, Luma};
 use rand_distr::{Distribution, Normal};
+use alloc::vec::Vec;
+use alloc::format;
+use alloc::string::String;
 
 use crate::{corners::Corner, definitions::Image, integral_image::integral_image, point::Point};
 

@@ -1,4 +1,5 @@
 use crate::definitions::Image;
+use alloc::vec::Vec;
 use image::Pixel;
 
 /// Equivalent to bucket tool in MS-PAINT

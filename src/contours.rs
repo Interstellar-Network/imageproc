@@ -1,8 +1,12 @@
 //! Functions for finding border contours within binary images.
 
 use crate::point::Point;
+use alloc::vec;
+use alloc::vec::Vec;
 use image::GrayImage;
 use num::{cast, Num, NumCast};
+
+#[cfg(feature = "std")]
 use std::collections::VecDeque;
 
 /// Whether a border of a foreground region borders an enclosing background region or a contained background region.
@@ -44,6 +48,7 @@ impl<T> Contour<T> {
 ///
 /// Based on the algorithm proposed by Suzuki and Abe: Topological Structural
 /// Analysis of Digitized Binary Images by Border Following.
+#[cfg(feature = "std")]
 pub fn find_contours<T>(image: &GrayImage) -> Vec<Contour<T>>
 where
     T: Num + NumCast + Copy + PartialEq + Eq,
@@ -56,6 +61,7 @@ where
 ///
 /// Based on the algorithm proposed by Suzuki and Abe: Topological Structural
 /// Analysis of Digitized Binary Images by Border Following.
+#[cfg(feature = "std")]
 pub fn find_contours_with_threshold<T>(image: &GrayImage, threshold: u8) -> Vec<Contour<T>>
 where
     T: Num + NumCast + Copy + PartialEq + Eq,
@@ -198,6 +204,7 @@ where
     contours
 }
 
+#[cfg(feature = "std")]
 fn rotate_to_value<T: Eq + Copy>(values: &mut VecDeque<T>, value: T) {
     let rotate_pos = values.iter().position(|x| *x == value).unwrap();
     values.rotate_left(rotate_pos);

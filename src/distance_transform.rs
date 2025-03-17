@@ -2,8 +2,10 @@
 //! image from the nearest pixel of interest.
 
 use crate::definitions::Image;
+use alloc::vec;
+use alloc::vec::Vec;
+use core::cmp::min;
 use image::{GenericImage, GenericImageView, GrayImage, Luma};
-use std::cmp::min;
 
 /// How to measure distance between coordinates.
 /// See [`distance_transform`] for examples.

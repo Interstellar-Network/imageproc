@@ -1,5 +1,5 @@
+use core::f32;
 use image::{GenericImage, Pixel};
-use std::f32;
 
 use crate::definitions::{Clamp, Image};
 use crate::drawing::Canvas;

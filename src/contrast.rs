@@ -1,6 +1,6 @@
 //! Functions for manipulating the contrast of images.
 
-use std::cmp::{max, min};
+use core::cmp::{max, min};
 
 use image::{GrayImage, Luma, Pixel};
 #[cfg(feature = "rayon")]

@@ -7,6 +7,8 @@ use crate::{
 use image::{GenericImageView, GrayImage};
 use rand::SeedableRng;
 use rand_distr::Distribution;
+use alloc::vec::Vec;
+use alloc::vec;
 
 #[cfg(feature = "std")]
 use rand::rngs::StdRng;

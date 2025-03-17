@@ -18,8 +18,10 @@ use crate::kernel::{self, Kernel};
 use crate::map::{ChannelMap, WithChannel};
 use num::Num;
 
-use std::cmp::{max, min};
-use std::f32;
+use alloc::vec;
+use alloc::vec::Vec;
+use core::cmp::{max, min};
+use core::f32;
 
 /// Returns 2d correlation of an image. Intermediate calculations are performed
 /// at type K, and the results converted to pixel Q via f. Pads by continuity.

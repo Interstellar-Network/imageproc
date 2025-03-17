@@ -20,6 +20,10 @@ use imageproc::{
     drawing::draw_line_segment_mut,
     point::Point,
 };
+use alloc::format;
+use alloc::string::String;
+
+extern crate alloc;
 
 use std::{env, path::Path};
 

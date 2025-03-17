@@ -1,7 +1,7 @@
 use super::{signals, Bits64};
 use crate::definitions::Image;
+use alloc::borrow::Cow;
 use image::{imageops, math::Rect, Luma};
-use std::borrow::Cow;
 
 /// Stores the result of the [`phash`].
 /// Implements [`Hash`] trait.

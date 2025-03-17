@@ -1,7 +1,7 @@
 use crate::definitions::Image;
 use crate::drawing::Canvas;
+use core::mem::{swap, transmute};
 use image::{GenericImage, Pixel};
-use std::mem::{swap, transmute};
 
 /// Iterates over the coordinates in a line segment using
 /// [Bresenham's line drawing algorithm](https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm).

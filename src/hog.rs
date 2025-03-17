@@ -5,7 +5,9 @@ use crate::definitions::{Clamp, Image};
 use crate::filter::filter_clamped;
 use crate::kernel::{self};
 use crate::math::l2_norm;
+use alloc::format;
 use alloc::string::String;
+use alloc::vec;
 use alloc::vec::Vec;
 use core::f32;
 use image::{GenericImage, GrayImage, Luma};
@@ -398,7 +400,7 @@ where
     I: GenericImage,
 {
     use crate::drawing::draw_line_segment_mut;
-    use std::cmp;
+    use core::cmp;
 
     let (width, height) = image.dimensions();
     let scale = cmp::max(width, height) as f32 / 2f32;

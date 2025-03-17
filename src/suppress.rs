@@ -3,6 +3,7 @@
 use crate::definitions::{Image, Position, Score};
 use alloc::vec::Vec;
 use core::cmp;
+use alloc::vec;
 use image::{GenericImage, Luma, Primitive};
 
 /// Returned image has zeroes for all inputs pixels which do not have the greatest
