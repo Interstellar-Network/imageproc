@@ -37,8 +37,8 @@ rustdct = "0.7.1"
 # Interstellar
 getrandom = { version = "=0.2.3", default-features = false }
 
-# [target.'cfg(target_arch = "wasm32")'.dependencies]
-# getrandom = { version = "0.2", default-features = false, features = ["js"] }
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+getrandom = { version = "0.2", default-features = false, features = ["js"] }
 
 [dev-dependencies]
 assert_approx_eq = "1.1.0"
