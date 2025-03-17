@@ -1,8 +1,9 @@
 //! Functions for suppressing non-maximal values.
 
 use crate::definitions::{Image, Position, Score};
+use alloc::vec::Vec;
+use core::cmp;
 use image::{GenericImage, Luma, Primitive};
-use std::cmp;
 
 /// Returned image has zeroes for all inputs pixels which do not have the greatest
 /// intensity in the (2 * radius + 1) square block centred on them.

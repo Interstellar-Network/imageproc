@@ -6,6 +6,8 @@ use crate::{
     distance_transform::{distance_transform_impl, distance_transform_mut, DistanceFrom, Norm},
     point::Point,
 };
+use alloc::vec::Vec;
+use core::iter;
 use image::{GrayImage, Luma};
 use itertools::Itertools;
 
@@ -501,7 +503,7 @@ impl Mask {
     /// ```
     pub fn disk(radius: u8) -> Self {
         let radius_squared = u32::from(radius).pow(2);
-        let half_widths_per_height = std::iter::successors(
+        let half_widths_per_height = iter::successors(
             Some((-i16::from(radius), 0u8)),
             |&(last_height, last_half_width)| {
                 if last_height == i16::from(radius) {

@@ -7,8 +7,9 @@ use crate::definitions::{HasBlack, Image};
 use crate::gradients::gradients;
 use crate::kernel::{self};
 use crate::map::{map_pixels, WithChannel};
+use alloc::vec::Vec;
+use core::cmp::min;
 use image::{GrayImage, Luma, Pixel, Rgb};
-use std::cmp::min;
 
 /// An image seam connecting the bottom of an image to its top (in that order).
 pub struct VerticalSeam(Vec<u32>);

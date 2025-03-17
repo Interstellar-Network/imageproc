@@ -1,5 +1,7 @@
 //! An implementation of disjoint set forests for union find.
 
+use alloc::vec::Vec;
+
 /// Data structure for efficient union find.
 pub struct DisjointSetForest {
     /// Number of forest elements.

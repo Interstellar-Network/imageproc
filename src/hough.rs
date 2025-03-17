@@ -5,8 +5,9 @@
 use crate::definitions::Image;
 use crate::drawing::draw_line_segment_mut;
 use crate::suppress::suppress_non_maximum;
+use alloc::vec::Vec;
+use core::f32;
 use image::{GenericImage, GenericImageView, GrayImage, Luma, Pixel};
-use std::f32;
 
 /// A detected line, in polar coordinates.
 #[derive(Copy, Clone, Debug, PartialEq)]

@@ -1,6 +1,7 @@
 //! Statistical properties of images.
 
 use crate::definitions::Image;
+use alloc::vec::Vec;
 use image::{GenericImageView, GrayImage, Pixel, Primitive};
 use num::Bounded;
 

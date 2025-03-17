@@ -5,9 +5,11 @@ use crate::definitions::{Clamp, Image};
 use crate::filter::filter_clamped;
 use crate::kernel::{self};
 use crate::math::l2_norm;
+use alloc::string::String;
+use alloc::vec::Vec;
+use core::f32;
 use image::{GenericImage, GrayImage, Luma};
 use num::Zero;
-use std::f32;
 
 /// Parameters for HoG descriptors.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]

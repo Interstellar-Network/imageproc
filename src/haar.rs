@@ -3,6 +3,7 @@
 //! [Haar-like features]: https://en.wikipedia.org/wiki/Haar-like_features
 
 use crate::definitions::{HasBlack, HasWhite, Image};
+use alloc::vec::Vec;
 use image::{GenericImage, GenericImageView, Luma};
 use itertools::Itertools;
 use std::marker::PhantomData;

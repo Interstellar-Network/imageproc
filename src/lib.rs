@@ -1,5 +1,6 @@
 #![doc = include_str!("../README.md")]
 #![deny(missing_docs)]
+#![cfg_attr(not(feature = "std"), no_std)]
 #![cfg_attr(test, feature(test))]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 #![allow(
@@ -13,6 +14,8 @@ extern crate test;
 #[cfg(test)]
 #[macro_use]
 extern crate assert_approx_eq;
+
+extern crate alloc;
 
 #[cfg(test)]
 mod proptest_utils;
