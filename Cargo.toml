@@ -14,7 +14,8 @@ exclude = [".github/*", "examples/*", "tests/*"]
 
 [features]
 default = ["rayon", "image/default", "std", "itertools/use_std"]
-std = ["ab_glyph/std", "nalgebra/std", "rand/std", "rand/std_rng"]
+std = ["ab_glyph/std", "nalgebra/std", "rand/std", "rand/std_rng", "dep:rustdct"]
+alloc = ["rand_distr/alloc"]
 display-window = ["sdl2"]
 rayon = ["dep:rayon", "image/rayon"]
 
@@ -32,13 +33,14 @@ sdl2 = { version = "0.36", optional = true, default-features = false, features =
     "bundled",
 ] }
 katexit = { version = "0.1.4", optional = true, default-features = false }
-rustdct = "0.7.1"
+rustdct = { version = "0.7.1", optional = true }
 
 # Interstellar
 getrandom = { version = "=0.2.3", default-features = false }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-getrandom = { version = "0.2", default-features = false, features = ["js"] }
+# TODO(interstellar) this need to be commented out for SGX, but SHOULD be there for wasm
+# getrandom = { version = "0.2", default-features = false, features = ["js"] }
 
 [dev-dependencies]
 assert_approx_eq = "1.1.0"

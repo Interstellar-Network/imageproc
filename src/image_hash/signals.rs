@@ -7,6 +7,7 @@ use alloc::vec;
 /// Computes the 2 dimensional [DCT].
 ///
 /// [DCT]: https://en.wikipedia.org/wiki/Discrete_cosine_transform
+#[cfg(feature = "rustdct")]
 pub(super) fn dct2d(img: Cow<Image<Luma<f32>>>) -> Image<Luma<f32>> {
     #[allow(non_snake_case)]
     let T = |img: Cow<Image<_>>| -> Image<_> {
@@ -38,6 +39,7 @@ pub(super) fn dct2d(img: Cow<Image<Luma<f32>>>) -> Image<Luma<f32>> {
 ///
 /// [DCT]: https://en.wikipedia.org/wiki/Discrete_cosine_transform
 // TODO: compute inplace
+#[cfg(feature = "rustdct")]
 fn dct1d(
     img: &Image<Luma<f32>>,
     ctx: &dyn rustdct::TransformType2And3<f32>,

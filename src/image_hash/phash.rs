@@ -51,6 +51,7 @@ impl PHash {
 ///
 /// [pHash]: https://phash.org/docs/pubs/thesis_zauner.pdf
 /// [DCT]: https://en.wikipedia.org/wiki/Discrete_cosine_transform
+#[cfg(feature = "rustdct")]
 pub fn phash(img: &Image<Luma<f32>>) -> PHash {
     const N: u32 = 8;
     const HASH_FACTOR: u32 = 4;

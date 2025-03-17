@@ -8,4 +8,7 @@ mod signals;
 
 use bits::Bits64;
 
-pub use phash::{phash, PHash};
+pub use phash::PHash;
+
+#[cfg(feature = "rustdct")]
+pub use phash::phash;
