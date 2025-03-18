@@ -1,10 +1,12 @@
 //! Utils for testing and debugging.
 
 use crate::definitions::Image;
-use image::{
-    open, DynamicImage, GenericImage, GenericImageView, GrayImage, Luma, Pixel, Rgb, RgbImage,
-};
+use core_maths::CoreFloat;
+use image::{DynamicImage, GenericImage, GenericImageView, GrayImage, Luma, Pixel, Rgb, RgbImage};
 use itertools::Itertools;
+
+#[cfg(feature = "std")]
+use image::open;
 
 use alloc::format;
 use alloc::string::String;

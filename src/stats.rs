@@ -5,6 +5,7 @@ use alloc::vec::Vec;
 use image::{GenericImageView, GrayImage, Pixel, Primitive};
 use num::Bounded;
 use alloc::vec;
+use core_maths::CoreFloat;
 
 /// A minimum and maximum value returned by [`min_max()`]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

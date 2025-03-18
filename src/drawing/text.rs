@@ -1,4 +1,5 @@
 use core::f32;
+use core_maths::CoreFloat;
 use image::{GenericImage, Pixel};
 
 use crate::definitions::{Clamp, Image};

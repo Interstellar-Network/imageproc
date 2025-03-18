@@ -3,6 +3,7 @@
 
 use crate::definitions::{Clamp, Image};
 use core::{cmp, ops::Mul};
+use core_maths::CoreFloat;
 use image::{GenericImageView, Pixel};
 #[cfg(feature = "rayon")]
 use rayon::prelude::*;

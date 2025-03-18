@@ -1,6 +1,7 @@
 use crate::definitions::Image;
 use crate::drawing::Canvas;
 use core::mem::{swap, transmute};
+use core_maths::CoreFloat;
 use image::{GenericImage, Pixel};
 
 /// Iterates over the coordinates in a line segment using

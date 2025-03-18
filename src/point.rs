@@ -1,6 +1,7 @@
 //! A 2d point type.
 
 use core::ops::{Add, AddAssign, Sub, SubAssign};
+use core_maths::CoreFloat;
 use num::{Num, NumCast};
 
 /// A 2d point.

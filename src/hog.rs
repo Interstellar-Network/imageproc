@@ -10,6 +10,7 @@ use alloc::string::String;
 use alloc::vec;
 use alloc::vec::Vec;
 use core::f32;
+use core_maths::CoreFloat;
 use image::{GenericImage, GrayImage, Luma};
 use num::Zero;
 

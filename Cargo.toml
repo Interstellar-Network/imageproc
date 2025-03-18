@@ -37,6 +37,7 @@ rustdct = { version = "0.7.1", optional = true }
 
 # Interstellar
 getrandom = { version = "=0.2.3", default-features = false }
+core_maths = "0.1.1"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 # TODO(interstellar) this need to be commented out for SGX, but SHOULD be there for wasm

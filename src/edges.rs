@@ -5,6 +5,7 @@ use crate::filter::{filter_clamped, gaussian_blur_f32};
 use crate::kernel::{self};
 use alloc::vec::Vec;
 use core::f32;
+use core_maths::CoreFloat;
 use image::{GenericImageView, GrayImage, Luma};
 
 /// Runs the canny edge detection algorithm.

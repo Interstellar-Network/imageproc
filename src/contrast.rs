@@ -2,6 +2,7 @@
 
 use core::cmp::{max, min};
 
+use core_maths::CoreFloat;
 use image::{GrayImage, Luma, Pixel};
 #[cfg(feature = "rayon")]
 use rayon::prelude::*;

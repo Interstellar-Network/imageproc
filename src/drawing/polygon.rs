@@ -4,6 +4,7 @@ use crate::drawing::Canvas;
 use crate::point::Point;
 use alloc::vec::Vec;
 use core::cmp::{max, min};
+use core_maths::CoreFloat;
 use image::GenericImage;
 
 /// Draws a polygon and its contents on an image.

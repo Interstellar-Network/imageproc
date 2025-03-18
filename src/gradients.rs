@@ -7,6 +7,7 @@ use crate::kernel::{
     SCHARR_VERTICAL_3X3, SOBEL_HORIZONTAL_3X3, SOBEL_VERTICAL_3X3,
 };
 use crate::map::{ChannelMap, WithChannel};
+use core_maths::CoreFloat;
 use image::{GenericImage, GenericImageView, GrayImage, Luma, Pixel};
 use itertools::multizip;
 

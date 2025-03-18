@@ -22,6 +22,7 @@ use alloc::vec;
 use alloc::vec::Vec;
 use core::cmp::{max, min};
 use core::f32;
+use core_maths::CoreFloat;
 
 /// Returns 2d correlation of an image. Intermediate calculations are performed
 /// at type K, and the results converted to pixel Q via f. Pads by continuity.

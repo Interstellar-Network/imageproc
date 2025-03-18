@@ -1,6 +1,7 @@
 use crate::definitions::Image;
 use crate::drawing::line::draw_line_segment_mut;
 use crate::drawing::Canvas;
+use core_maths::CoreFloat;
 use image::GenericImage;
 
 /// Draws a cubic Bézier curve on an image.

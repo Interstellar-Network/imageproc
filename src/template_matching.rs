@@ -1,5 +1,6 @@
 //! Functions for performing template matching.
 use crate::definitions::Image;
+use core_maths::CoreFloat;
 use image::{GenericImageView, GrayImage, Luma, Primitive};
 
 #[cfg_attr(feature = "katexit", katexit::katexit)]

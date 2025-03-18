@@ -7,6 +7,7 @@ use crate::drawing::draw_line_segment_mut;
 use crate::suppress::suppress_non_maximum;
 use alloc::vec::Vec;
 use core::f32;
+use core_maths::CoreFloat;
 use image::{GenericImage, GenericImageView, GrayImage, Luma, Pixel};
 
 /// A detected line, in polar coordinates.

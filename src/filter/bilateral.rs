@@ -1,5 +1,6 @@
 //! Bilateral Filter and associated items.
 
+use core_maths::CoreFloat;
 use image::{GenericImage, Pixel};
 use itertools::Itertools;
 use num::cast::AsPrimitive;

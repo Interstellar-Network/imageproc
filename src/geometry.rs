@@ -5,6 +5,7 @@ use alloc::vec;
 use alloc::vec::Vec;
 use core::cmp::{Ord, Ordering};
 use core::f64::{self, consts::PI};
+use core_maths::CoreFloat;
 use num::{cast, NumCast};
 
 /// Computes the length of an arc. If `closed` is set to `true` then the distance

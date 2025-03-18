@@ -1,5 +1,7 @@
 //! Assorted mathematical helper functions.
 
+use core_maths::CoreFloat;
+
 /// L1 norm of a vector.
 pub fn l1_norm(xs: &[f32]) -> f32 {
     xs.iter().fold(0f32, |acc, x| acc + x.abs())

@@ -2,6 +2,7 @@ use crate::definitions::Image;
 use crate::drawing::draw_if_in_bounds;
 use crate::drawing::line::draw_line_segment_mut;
 use crate::drawing::Canvas;
+use core_maths::CoreFloat;
 use image::GenericImage;
 
 /// Draws the outline of an ellipse on an image.

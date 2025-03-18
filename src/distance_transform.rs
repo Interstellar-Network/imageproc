@@ -5,6 +5,7 @@ use crate::definitions::Image;
 use alloc::vec;
 use alloc::vec::Vec;
 use core::cmp::min;
+use core_maths::CoreFloat;
 use image::{GenericImage, GenericImageView, GrayImage, Luma};
 
 /// How to measure distance between coordinates.

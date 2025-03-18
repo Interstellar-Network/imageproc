@@ -5,6 +5,7 @@ use crate::definitions::Image;
 use crate::map::{ChannelMap, WithChannel};
 use alloc::vec;
 use core::ops::AddAssign;
+use core_maths::CoreFloat;
 use image::{GenericImageView, GrayImage, Luma, Pixel, Primitive, Rgb, Rgba};
 
 /// Computes the 2d running sum of an image. Channels are summed independently.
