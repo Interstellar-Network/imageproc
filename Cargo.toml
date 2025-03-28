@@ -71,9 +71,9 @@ codegen-units = 1
 
 ###############################################################################
 
-[patch."https://github.com/Interstellar-Network/image.git"]
-image = { path = "../image/" }
-
-[patch.crates-io]
-image = { path = "../image/" }
+# [patch."https://github.com/Interstellar-Network/image.git"]
+# image = { path = "../image/" }
+#
+# [patch.crates-io]
+# image = { path = "../image/" }
 
