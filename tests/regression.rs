@@ -10,29 +10,38 @@
 //!
 //! [caltech256 dataset]: https://authors.library.caltech.edu/7694/
 
-#![feature(test)]
-#![feature(unboxed_closures)]
-#![feature(fn_traits)]
+#![cfg(not(miri))]
 
 #[macro_use]
 extern crate imageproc;
 
-use image::{DynamicImage, GrayImage, ImageBuffer, Luma, Pixel, PixelWithColorType, Rgb, RgbImage, Rgba, RgbaImage};
+use std::{env, f32, path::Path};
+
+use image::{
+    DynamicImage, GrayImage, Luma, Pixel, PixelWithColorType, Rgb, RgbImage, Rgba, RgbaImage,
+};
+
+use imageproc::contrast::ThresholdType;
+use imageproc::definitions::Image;
+use imageproc::drawing::text_size;
+use imageproc::filter::bilateral::GaussianEuclideanColorDistance;
+use imageproc::filter::bilateral_filter;
+use imageproc::kernel::{self};
+use imageproc::rect::{Rect, Region};
 use imageproc::{
     definitions::{Clamp, HasBlack, HasWhite},
     edges::canny,
-    filter::{bilateral_filter, gaussian_blur_f32, sharpen3x3},
+    filter::{gaussian_blur_f32, sharpen3x3},
     geometric_transformations::{rotate_about_center, warp, Interpolation, Projection},
     gradients,
     utils::load_image_or_panic,
 };
-use std::{env, f32, path::Path};
 
 /// The directory containing the input images used in regression tests.
-const INPUT_DIR: &'static str = "./tests/data";
+const INPUT_DIR: &str = "./tests/data";
 
 /// The directory containing the truth images to compare against test outputs.
-const TRUTH_DIR: &'static str = "./tests/data/truth";
+const TRUTH_DIR: &str = "./tests/data/truth";
 
 // If the REGENERATE environment variable is set then running tests will update the truth files
 // to match the output of the current code.
@@ -66,8 +75,8 @@ impl FromDynamic for RgbaImage {
 fn compare_to_truth<P, F>(input_file_name: &str, truth_file_name: &str, op: F)
 where
     P: Pixel<Subpixel = u8> + PixelWithColorType,
-    ImageBuffer<P, Vec<u8>>: FromDynamic,
-    F: Fn(&ImageBuffer<P, Vec<u8>>) -> ImageBuffer<P, Vec<u8>>,
+    Image<P>: FromDynamic,
+    F: Fn(&Image<P>) -> Image<P>,
 {
     compare_to_truth_with_tolerance(input_file_name, truth_file_name, op, 0u8);
 }
@@ -81,40 +90,37 @@ fn compare_to_truth_with_tolerance<P, F>(
     tol: u8,
 ) where
     P: Pixel<Subpixel = u8> + PixelWithColorType,
-    ImageBuffer<P, Vec<u8>>: FromDynamic,
-    F: Fn(&ImageBuffer<P, Vec<u8>>) -> ImageBuffer<P, Vec<u8>>,
+    Image<P>: FromDynamic,
+    F: Fn(&Image<P>) -> Image<P>,
 {
-    let input = ImageBuffer::<P, Vec<u8>>::from_dynamic(&load_image_or_panic(
+    let input = Image::<P>::from_dynamic(&load_image_or_panic(
         Path::new(INPUT_DIR).join(input_file_name),
     ));
-    let actual = op.call((&input,));
+    let actual = op(&input);
     compare_to_truth_image_with_tolerance(&actual, truth_file_name, tol);
 }
 
 /// Checks that an image matches a 'truth' image.
-fn compare_to_truth_image<P>(actual: &ImageBuffer<P, Vec<u8>>, truth_file_name: &str)
+fn compare_to_truth_image<P>(actual: &Image<P>, truth_file_name: &str)
 where
     P: Pixel<Subpixel = u8> + PixelWithColorType,
-    ImageBuffer<P, Vec<u8>>: FromDynamic,
+    Image<P>: FromDynamic,
 {
     compare_to_truth_image_with_tolerance(actual, truth_file_name, 0u8);
 }
 
 /// Checks that an image matches a 'truth' image to within a given per-pixel tolerance.
-fn compare_to_truth_image_with_tolerance<P>(
-    actual: &ImageBuffer<P, Vec<u8>>,
-    truth_file_name: &str,
-    tol: u8,
-) where
+fn compare_to_truth_image_with_tolerance<P>(actual: &Image<P>, truth_file_name: &str, tol: u8)
+where
     P: Pixel<Subpixel = u8> + PixelWithColorType,
-    ImageBuffer<P, Vec<u8>>: FromDynamic,
+    Image<P>: FromDynamic,
 {
     if should_regenerate() {
         actual
             .save(Path::new(TRUTH_DIR).join(truth_file_name))
             .unwrap();
     } else {
-        let truth = ImageBuffer::<P, Vec<u8>>::from_dynamic(&load_image_or_panic(
+        let truth = Image::<P>::from_dynamic(&load_image_or_panic(
             Path::new(TRUTH_DIR).join(truth_file_name),
         ));
         assert_pixels_eq_within!(*actual, truth, tol);
@@ -238,12 +244,11 @@ fn test_affine_nearest_rgb() {
     fn affine_nearest(image: &RgbImage) -> RgbImage {
         let root_two_inv = 1f32 / 2f32.sqrt() * 2.0;
         #[rustfmt::skip]
-        let hom = Projection::from_matrix([
+            let hom = Projection::from_matrix([
             root_two_inv, -root_two_inv,  50.0,
             root_two_inv,  root_two_inv, -70.0,
                      0.0,           0.0,   1.0,
-        ])
-        .unwrap();
+        ]).unwrap();
         warp(image, &hom, Interpolation::Nearest, Rgb::black())
     }
     compare_to_truth(
@@ -258,12 +263,12 @@ fn test_affine_bilinear_rgb() {
     fn affine_bilinear(image: &RgbImage) -> RgbImage {
         let root_two_inv = 1f32 / 2f32.sqrt() * 2.0;
         #[rustfmt::skip]
-        let hom = Projection::from_matrix([
-            root_two_inv, -root_two_inv,  50.0,
-            root_two_inv,  root_two_inv, -70.0,
-                     0.0,           0.0,   1.0,
+            let hom = Projection::from_matrix([
+            root_two_inv, -root_two_inv, 50.0,
+            root_two_inv, root_two_inv, -70.0,
+            0.0, 0.0, 1.0,
         ])
-        .unwrap();
+            .unwrap();
 
         warp(image, &hom, Interpolation::Bilinear, Rgb::black())
     }
@@ -280,10 +285,10 @@ fn test_affine_bicubic_rgb() {
     fn affine_bilinear(image: &RgbImage) -> RgbImage {
         let root_two_inv = 1f32 / 2f32.sqrt() * 2.0;
         #[rustfmt::skip]
-        let hom = Projection::from_matrix([
-            root_two_inv, -root_two_inv,  50.0,
-            root_two_inv,  root_two_inv, -70.0,
-            0.0         , 0.0          , 1.0,
+            let hom = Projection::from_matrix([
+            root_two_inv, -root_two_inv, 50.0,
+            root_two_inv, root_two_inv, -70.0,
+            0.0, 0.0, 1.0,
         ]).unwrap();
 
         warp(image, &hom, Interpolation::Bicubic, Rgb::black())
@@ -300,7 +305,12 @@ fn test_affine_bicubic_rgb() {
 fn test_sobel_gradients() {
     fn sobel_gradients(image: &GrayImage) -> GrayImage {
         imageproc::map::map_subpixels(
-            &gradients::sobel_gradients(image),
+            &gradients::gradients(
+                image,
+                kernel::SOBEL_HORIZONTAL_3X3,
+                kernel::SOBEL_VERTICAL_3X3,
+                |p| p,
+            ),
             <u8 as Clamp<u16>>::clamp,
         )
     }
@@ -358,7 +368,7 @@ fn test_gaussian_blur_stdev_10() {
 fn test_adaptive_threshold() {
     use imageproc::contrast::adaptive_threshold;
     compare_to_truth("zebra.png", "zebra_adaptive_threshold.png", |image| {
-        adaptive_threshold(image, 41)
+        adaptive_threshold(image, 41, 0)
     });
 }
 
@@ -367,7 +377,7 @@ fn test_otsu_threshold() {
     use imageproc::contrast::{otsu_level, threshold};
     fn otsu_threshold(image: &GrayImage) -> GrayImage {
         let level = otsu_level(image);
-        threshold(image, level)
+        threshold(image, level, ThresholdType::Binary)
     }
     compare_to_truth("zebra.png", "zebra_otsu.png", otsu_threshold);
 }
@@ -499,8 +509,8 @@ fn test_draw_spiral_polygon() {
 #[test]
 fn test_draw_antialised_polygon() {
     use imageproc::drawing::draw_antialiased_polygon_mut;
-    use imageproc::point::Point;
     use imageproc::pixelops::interpolate;
+    use imageproc::point::Point;
 
     let mut image = GrayImage::from_pixel(300, 300, Luma::black());
     let white = Luma::white();
@@ -531,7 +541,12 @@ fn test_draw_antialised_polygon() {
         Point::new(235, 25),
         Point::new(265, 35),
     ];
-    draw_antialiased_polygon_mut(&mut image, &partially_out_of_bounds_star, white, interpolate);
+    draw_antialiased_polygon_mut(
+        &mut image,
+        &partially_out_of_bounds_star,
+        white,
+        interpolate,
+    );
 
     let triangle = vec![Point::new(35, 80), Point::new(145, 110), Point::new(5, 90)];
     draw_antialiased_polygon_mut(&mut image, &triangle, white, interpolate);
@@ -541,7 +556,12 @@ fn test_draw_antialised_polygon() {
         Point::new(350, 130),
         Point::new(250, 120),
     ];
-    draw_antialiased_polygon_mut(&mut image, &partially_out_of_bounds_triangle, white, interpolate);
+    draw_antialiased_polygon_mut(
+        &mut image,
+        &partially_out_of_bounds_triangle,
+        white,
+        interpolate,
+    );
 
     let quad = vec![
         Point::new(190, 250),
@@ -600,7 +620,7 @@ fn test_draw_hollow_polygon() {
     let triangle = vec![
         Point::new(35.0, 80.0),
         Point::new(145.0, 110.0),
-        Point::new(5.0, 90.0)
+        Point::new(5.0, 90.0),
     ];
     draw_hollow_polygon_mut(&mut image, &triangle, white);
 
@@ -628,7 +648,6 @@ fn test_draw_hollow_polygon() {
     draw_hollow_polygon_mut(&mut image, &hex, white);
 
     compare_to_truth_image(&image, "polygon_hollow.png");
-
 }
 
 #[test]
@@ -732,9 +751,27 @@ fn test_draw_filled_ellipse() {
 }
 
 #[test]
+fn test_draw_flood_filled_shape() {
+    use imageproc::drawing::{draw_hollow_ellipse_mut, flood_fill_mut};
+
+    let red = Rgb([255, 0, 0]);
+    let green = Rgb([0, 255, 0]);
+    let blue = Rgb([0, 0, 255]);
+    let mut image = RgbImage::from_pixel(200, 200, Rgb([255, 255, 255]));
+
+    draw_hollow_ellipse_mut(&mut image, (100, 100), 50, 50, red);
+    draw_hollow_ellipse_mut(&mut image, (50, 100), 40, 90, blue);
+    draw_hollow_ellipse_mut(&mut image, (100, 150), 80, 30, green);
+    draw_hollow_ellipse_mut(&mut image, (150, 150), 100, 60, blue);
+
+    flood_fill_mut(&mut image, 120, 120, red);
+    compare_to_truth_image(&image, "flood_filled_shape.png");
+}
+
+#[test]
 fn test_hough_line_detection() {
     use imageproc::hough::{detect_lines, draw_polar_lines, LineDetectionOptions, PolarLine};
-    use imageproc::map::map_colors;
+    use imageproc::map::map_pixels;
 
     let white = Rgb([255u8, 255u8, 255u8]);
     let black = Rgb([0u8, 0u8, 0u8]);
@@ -743,7 +780,7 @@ fn test_hough_line_detection() {
     let image = GrayImage::new(100, 100);
     let image = draw_polar_lines(
         &image,
-        &vec![
+        &[
             PolarLine {
                 r: 50.0,
                 angle_in_degrees: 0,
@@ -772,7 +809,7 @@ fn test_hough_line_detection() {
         suppression_radius: 8,
     };
     let lines: Vec<PolarLine> = detect_lines(&image, options);
-    let color_edges = map_colors(&image, |p| if p[0] > 0 { white } else { black });
+    let color_edges = map_pixels(&image, |p| if p[0] > 0 { white } else { black });
 
     // Draw detected lines on top of original image
     let lines_image = draw_polar_lines(&color_edges, &lines, green);
@@ -783,12 +820,31 @@ fn test_hough_line_detection() {
 #[test]
 fn test_bilateral_filter() {
     fn filter(image: &GrayImage) -> GrayImage {
-        let sigma_color: f32 = 20.;
-        let sigma_spatial: f32 = 2.;
-        let radius: f32 = 3. * sigma_spatial;
-        let win_size = (radius * 2. + 1.) as u32;
-        bilateral_filter(image, win_size, sigma_color, sigma_spatial)
+        bilateral_filter(image, 2, 10.0, GaussianEuclideanColorDistance::new(10.0))
     }
 
     compare_to_truth_with_tolerance("lumaphant.png", "lumaphant_bilateral.png", filter, 1)
+}
+
+#[test]
+fn test_draw_text() {
+    let font_bytes = include_bytes!("data/fonts/DejaVuSans.ttf");
+    let font = ab_glyph::FontRef::try_from_slice(font_bytes).unwrap();
+
+    let background = Luma::black();
+    let mut img = GrayImage::from_pixel(300, 300, background);
+
+    let text = "Hello world!";
+    let scale = 30.0;
+    let (x, y) = (50, 100);
+    imageproc::drawing::draw_text_mut(&mut img, Luma::white(), x, y, scale, &font, text);
+    compare_to_truth_image(&img, "text.png");
+
+    let (text_w, text_h) = text_size(scale, &font, text);
+    let rect = Rect::at(x, y).of_size(text_w, text_h);
+    for (px, py, &p) in img.enumerate_pixels() {
+        if !rect.contains(px as i32, py as i32) {
+            assert_eq!(p, background);
+        }
+    }
 }

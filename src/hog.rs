@@ -2,11 +2,17 @@
 //! and helpers for visualizing them.
 
 use crate::definitions::{Clamp, Image};
-use crate::gradients::{horizontal_sobel, vertical_sobel};
+use crate::filter::filter_clamped;
+use crate::kernel::{self};
 use crate::math::l2_norm;
-use image::{GenericImage, GrayImage, ImageBuffer, Luma};
+use alloc::format;
+use alloc::string::String;
+use alloc::vec;
+use alloc::vec::Vec;
+use core::f32;
+use core_maths::CoreFloat;
+use image::{GenericImage, GrayImage, Luma};
 use num::Zero;
-use std::f32;
 
 /// Parameters for HoG descriptors.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -257,8 +263,9 @@ pub fn cell_histograms(image: &GrayImage, spec: HogSpec) -> Array3d<f32> {
     let mut grid = Array3d::new(spec.cell_grid_lengths());
     let cell_area = spec.cell_area() as f32;
     let cell_side = spec.options.cell_side as f32;
-    let horizontal = horizontal_sobel(image);
-    let vertical = vertical_sobel(image);
+
+    let horizontal = filter_clamped::<_, _, i32>(image, kernel::SOBEL_HORIZONTAL_3X3);
+    let vertical = filter_clamped::<_, _, i32>(image, kernel::SOBEL_VERTICAL_3X3);
     let interval = orientation_bin_width(spec.options);
     let range = direction_range(spec.options);
 
@@ -367,11 +374,11 @@ impl Interpolation {
 /// horizontal location of the cell, then vertical location of the cell.
 /// Note that we ignore block-level aggregation or normalisation here.
 /// Each rendered star has side length `star_side`, so the image will have
-/// width grid.lengths[1] * `star_side` and height grid.lengths[2] * `star_side`.
+/// width `grid.lengths[1] * star_side` and height `grid.lengths[2] * star_side`.
 pub fn render_hist_grid(star_side: u32, grid: &View3d<'_, f32>, signed: bool) -> Image<Luma<u8>> {
     let width = grid.lengths[1] as u32 * star_side;
     let height = grid.lengths[2] as u32 * star_side;
-    let mut out = ImageBuffer::new(width, height);
+    let mut out = Image::new(width, height);
 
     for y in 0..grid.lengths[2] {
         let y_window = y as u32 * star_side;
@@ -394,7 +401,7 @@ where
     I: GenericImage,
 {
     use crate::drawing::draw_line_segment_mut;
-    use std::cmp;
+    use core::cmp;
 
     let (width, height) = image.dimensions();
     let scale = cmp::max(width, height) as f32 / 2f32;
@@ -497,7 +504,6 @@ fn data_length(lengths: [usize; 3]) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::utils::gray_bench_image;
     use ::test;
 
     #[test]
@@ -684,6 +690,14 @@ mod tests {
         let desc_unsigned = hog(&image, opts_unsigned);
         test::black_box(desc_unsigned.unwrap());
     }
+}
+
+#[cfg(not(miri))]
+#[cfg(test)]
+mod benches {
+    use super::*;
+    use crate::utils::gray_bench_image;
+    use ::test;
 
     #[bench]
     fn bench_hog(b: &mut test::Bencher) {

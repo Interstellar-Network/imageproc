@@ -1,5 +1,8 @@
 //! An implementation of disjoint set forests for union find.
 
+use alloc::vec::Vec;
+use alloc::vec;
+
 /// Data structure for efficient union find.
 pub struct DisjointSetForest {
     /// Number of forest elements.
@@ -79,6 +82,7 @@ impl DisjointSetForest {
     }
 
     /// Returns the elements of each tree.
+    #[cfg(feature = "std")]
     pub fn trees(&mut self) -> Vec<Vec<usize>> {
         use std::collections::HashMap;
 
@@ -108,9 +112,6 @@ impl DisjointSetForest {
 #[cfg(test)]
 mod tests {
     use super::DisjointSetForest;
-    use ::test;
-    use rand::{rngs::StdRng, SeedableRng};
-    use rand_distr::{Distribution, Uniform};
 
     #[test]
     fn test_trees() {
@@ -177,6 +178,14 @@ mod tests {
         assert_eq!(forest.parent, vec![1, 1, 1, 1, 0, 5]);
         assert_eq!(forest.num_trees(), 2);
     }
+}
+
+#[cfg(not(miri))]
+#[cfg(test)]
+mod benches {
+    use super::*;
+    use rand::{rngs::StdRng, SeedableRng};
+    use rand_distr::{Distribution, Uniform};
 
     #[bench]
     fn bench_disjoint_set_forest(b: &mut test::Bencher) {

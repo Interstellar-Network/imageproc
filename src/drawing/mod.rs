@@ -1,7 +1,4 @@
 //! Helpers for drawing basic shapes on images.
-//!
-//! Every `draw_` function comes in two variants: one creates a new copy of the input image, one modifies the image in place.
-//! The latter is more memory efficient, but you lose the original image.
 
 mod bezier;
 pub use self::bezier::{draw_cubic_bezier_curve, draw_cubic_bezier_curve_mut};
@@ -26,9 +23,8 @@ pub use self::line::{
 
 mod polygon;
 pub use self::polygon::{
-    draw_polygon, draw_polygon_mut,
-    draw_antialiased_polygon, draw_antialiased_polygon_mut,
-    draw_hollow_polygon, draw_hollow_polygon_mut,
+    draw_antialiased_polygon, draw_antialiased_polygon_mut, draw_hollow_polygon,
+    draw_hollow_polygon_mut, draw_polygon, draw_polygon_mut,
 };
 
 mod rect;
@@ -38,6 +34,9 @@ pub use self::rect::{
 
 mod text;
 pub use self::text::{draw_text, draw_text_mut, text_size};
+
+mod fill;
+pub use self::fill::{flood_fill, flood_fill_mut};
 
 // Set pixel at (x, y) to color if this point lies within image bounds,
 // otherwise do nothing.
